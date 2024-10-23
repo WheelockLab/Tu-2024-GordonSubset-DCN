@@ -1,11 +1,9 @@
 clear;close all;clc;
 addpath(genpath('./'));
 %% Set some parameters and load data
-Dworetsky153ROI = readtable('153ProbabilisticROIs_MNI_info.txt');% Dworetsky et al. 153 high probability ROI across individuals
 T = readtable('BCP_Jan2023_QCpass_asleep_atleast7pt2min_UNC_UMN_20240124_stats_withMullen.csv');
 
 % Load Infant
-% datafile = 'BCP_Gordon_BCP_Jan2023_QCpass_asleep_atleast7pt2min_UNC_UMN_20240124_7pt2min_randsample.mat'
 datafile = 'BCP_Tu_326_BCP_Jan2023_QCpass_asleep_atleast7pt2min_UNC_UMN_20240124_7pt2min_randsample.mat'
 load(datafile);
 zmatBCP = zmat;
