@@ -10,7 +10,7 @@ zmatBCP = zmat;
 for ii = 1:size(zmatBCP,1),zmatBCP(ii,ii,:) = 0;end
 avg_zmatBCP = mean(zmatBCP,3);
 
-load('/data/wheelock/data1/datasets/WashU120/pconns/washu120_parcellation_Gordon_20231101.mat')
+load('washu120_parcellation_Gordon_20231101.mat')
 for ii = 1:size(zmat,1),  zmat(ii,ii,:) = 0; end
 zmatWashU120 = mean(zmat,3);
 
@@ -106,6 +106,9 @@ end
 % quantile(SilGordonMean,[0.025,0.975])
 % quantile(SilKardanMean,[0.025,0.975])
 quantile(SilGordonSubsetMean,[0.025,0.975])
+sum(SilGordonMean<0)
+sum(SilKardanMean<0)
+sum(SilGordonSubsetMean<0)
 %% try to do bootstrap CI for the average SI estimate for BCP
 rng('default')
 SilGordonMean = NaN(1000,1);
@@ -158,6 +161,10 @@ end
 % quantile(SilGordonMean,[0.025,0.975])
 % quantile(SilKardanMean,[0.025,0.975])
 quantile(SilKardanSubsetMean,[0.025,0.975])
+
+sum(SilGordonMean<0)
+sum(SilKardanMean<0)
+sum(SilGordonSubsetMean<0)
 %% Frequency of each ROI belonging the area subset with different bootstrapped sessions
 % Supplementary Figure
 freq_SIpos = mean(SilGordon_BCP_eachROI>0); % for each ROI, how many times in 1000 did it have SI>0. This is to see how robust our selected 166 area is
