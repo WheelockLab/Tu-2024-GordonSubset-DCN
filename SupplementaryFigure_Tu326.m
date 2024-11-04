@@ -86,11 +86,25 @@ save(['./Results/moving_avg_results_Tu326_',network_name,'.mat'],'sil_Tu326*','a
 %%
 Tu326_12Networks = load('./Results/moving_avg_results_Tu326_12Networks.mat','sil_Tu326')
 Tu326_19Networks = load('./Results/moving_avg_results_Tu326_19Networks.mat','sil_Tu326')
-legendstr = {'Tu326_12Networks','Tu326_19Networks'}
+load('moving_avg_results.mat')
+legendstr = {'Gordon','Gordon (Subset)','Kardan','Kardan (Subset)','Tu326_12Networks','Tu326_19Networks'}
+clear h
 clear h
 figure('position',[100 100 400 400]);hold on;
-h(1) = plot(agemean,Tu326_12Networks.sil_Tu326,'LineWidth',2);
-h(2) = plot(agemean,Tu326_19Networks.sil_Tu326,'LineWidth',2)
+h(1) = plot(agemean,sil_Gordon,'LineWidth',2);
+h(2) = plot(agemean,sil_Gordon_subset,'LineWidth',2);
+h(3) = plot(agemean,sil_Kardan,'LineWidth',2);
+h(4) = plot(agemean,sil_Kardan_subset,'LineWidth',2);
+h(5) = plot(agemean,Tu326_12Networks.sil_Tu326,'LineWidth',2);
+h(6) = plot(agemean,Tu326_19Networks.sil_Tu326,'LineWidth',2);
+xlim([0.5,2.5]);
+Plot.vline(agemean(53)); %~ 1 year
+Plot.vline(agemean(223)); % ~2  year
+legend(h,legendstr,'location','best');
+legend('location','southoutside');
+ylabel('SI');
+xlabel('Age (yrs)')
+set(gca,'FontSize',12);
 xlim([0.5,2.5]);
 ylim([-0.1,0.4]);
 xline(agemean(53),'LineStyle','--'); %~ 1 year
