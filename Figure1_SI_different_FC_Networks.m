@@ -154,17 +154,18 @@ for isample = 1:1000
 end
 % save('./results/BCP_bootstrap_results.mat','SilGordonMean','SilGordonSubsetMean','SilKardanMean','SilKardanSubsetMean','SilGordon_BCP_eachROI')
 %% Load BCP bootstrap
-% load('./results/BCP_bootstrap_results.mat')
+load('./results/WU120_bootstrap_results.mat')
 % figure;
 % histogram(SilGordonMean-SilKardanMean);
 % quantile(SilGordonMean-SilKardanMean,[0.025,0.975])
 % quantile(SilGordonMean,[0.025,0.975])
 % quantile(SilKardanMean,[0.025,0.975])
-quantile(SilKardanSubsetMean,[0.025,0.975])
-
-sum(SilGordonMean<0)
-sum(SilKardanMean<0)
-sum(SilGordonSubsetMean<0)
+% quantile(SilKardanSubsetMean,[0.025,0.975])
+% 
+% sum(SilGordonMean<0)
+% sum(SilKardanMean<0)
+% sum(SilGordonSubsetMean<0)
+sum(SilGordonMean<SilKardanMean)
 %% Frequency of each ROI belonging the area subset with different bootstrapped sessions
 % Supplementary Figure
 freq_SIpos = mean(SilGordon_BCP_eachROI>0); % for each ROI, how many times in 1000 did it have SI>0. This is to see how robust our selected 166 area is

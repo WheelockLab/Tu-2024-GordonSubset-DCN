@@ -29,7 +29,7 @@ title('Infant FC');
 D = calc_correlationdist(avg_zmatBCP_Tu326);
 s = silhouette_coef_mod(IM.key(keepnets,2),D(keepnets,keepnets),M);
 text(0.2,-0.1,sprintf('avg SI = %2.3f',mean(s)),'Units','normalized','FontWeight','Bold');
-print(['./Figures/FcOrganizedByTu326Network'],'-dpng');
+% print(['./Figures/FcOrganizedByTu326Network'],'-dpng');
 %% Plot values on brain
 [~,sortid] = sort(IM.order);
 SI_Infant_Tu326 = s(sortid);
@@ -41,7 +41,7 @@ nexttile;
 plot_parcels_by_values(SI_Infant_Tu326,'med',Parcels,[-1,1],cmap) 
 nexttile;
 plot_parcels_by_values(SI_Infant_Tu326,'lat',Parcels,[-1,1],cmap) 
-print(['./Figures/FcOrganizedByTu326Network_glassbrain'],'-dpng');
+% print(['./Figures/FcOrganizedByTu326Network_glassbrain'],'-dpng');
 %% try to do bootstrap CI for the average SI estimate for BCP
 rng('default')
 SilTu326Mean = NaN(1000,1);
@@ -60,6 +60,35 @@ for isample = 1:1000
 end
 
 CI95 = quantile(SilTu326Mean,[0.025,0.975])
+
+save(['./results/BCP_bootstrap_results_Tu326_',network_name,'.mat'],'SilTu326Mean')
+return
+
+%% A big confound is that whether we get high SI across the group because they are the locations with low interindividual variability in infants, 
+% so we calculate SI on individuals here
+SI_Infant_TuNetworks_session = NaN(Nroi,Nsess);
+
+for isess = 1:Nsess
+    isess
+    keepnets = true(size(IM.key,1),1);
+    M = ones(max(IM.key(:,2)));M(noneidx,:) = 0; M(:,noneidx) = 0;M = M-diag(diag(M));
+    D = calc_correlationdist(zmatBCP_Tu326(:,:,isess));
+    s = silhouette_coef_mod(IM.key(keepnets,2),D(keepnets,keepnets),M);
+    SI_Infant_TuNetworks_session(keepnets,isess) = s;
+end
+save(['./results/SI_Infant_Tu_',network_name,'_session.mat'],'SI_Infant_TuNetworks_session');
+%% Load saved results and do some statistical tests
+BCP_Gordon = load('BCP_bootstrap_results.mat','SilGordonMean');
+BCP_Tu12Net = load('BCP_bootstrap_results_Tu326_12Networks.mat','SilTu326Mean');
+BCP_Tu19Net = load('BCP_bootstrap_results_Tu326_19Networks.mat','SilTu326Mean');
+
+% Don't do t-test because this is bootstrapped samples not independent samples and we subjectively decided the
+% number of samples
+% We just calculate the numbers out of 1000 bootstraps that are in the
+% opposite direction to our hypothesis
+mean((BCP_Gordon.SilGordonMean-BCP_Tu12Net.SilTu326Mean)>0)
+mean((BCP_Gordon.SilGordonMean-BCP_Tu19Net.SilTu326Mean)>0)
+
 %% ============== Repeat Figure 4 ====================
 %% Moving average window for age
 noneidx = [];
@@ -82,10 +111,10 @@ for jj =1:N
     s = silhouette_coef_mod(IM.key(keepnets,2),D(keepnets,keepnets),M);
     sil_Tu326(jj) = mean(s);
 end
-save(['./Results/moving_avg_results_Tu326_',network_name,'.mat'],'sil_Tu326*','agemean');
+save(['./results/moving_avg_results_Tu326_',network_name,'.mat'],'sil_Tu326*','agemean');
 %%
-Tu326_12Networks = load('./Results/moving_avg_results_Tu326_12Networks.mat','sil_Tu326')
-Tu326_19Networks = load('./Results/moving_avg_results_Tu326_19Networks.mat','sil_Tu326')
+Tu326_12Networks = load('./results/moving_avg_results_Tu326_12Networks.mat','sil_Tu326')
+Tu326_19Networks = load('./results/moving_avg_results_Tu326_19Networks.mat','sil_Tu326')
 load('moving_avg_results.mat')
 legendstr = {'Gordon','Gordon (Subset)','Kardan','Kardan (Subset)','Tu326_12Networks','Tu326_19Networks'}
 clear h

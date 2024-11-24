@@ -186,10 +186,10 @@ computeCohen_d(X(:,1),X(:,2),'paired')
 
 h = arrayfun(@(iROI)ttest(SI_YA_Gordon_session(iROI,:),0,'tail','right'),1:333); nansum(h)
 h = arrayfun(@(iROI)ttest(SI_YA_Kardan_session(iROI,:),0,'tail','right'),1:333); nansum(h)
-%% Supplementary: visualize the SI across individual sessions (BCP)
+%% SI across individual sessions (BCP)
 Nsess = size(zmat_gordon_BCP,3);
-SI_BCP_Gordon_session = NaN(333,Nsess);
-SI_BCP_Kardan_session = NaN(333,Nsess);
+SI_BCP_Gordon_session = NaN(Nroi,Nsess);
+SI_BCP_Kardan_session = NaN(Nroi,Nsess);
 for isess = 1:Nsess
     isess
     noneidx = find((string(IM.Nets)=="None")|(string(IM.Nets)=="USp"));
@@ -339,3 +339,28 @@ xlabel('Age (yrs)');
 ylabel({'avg SI difference';'(Kardan-Gordon)'});
 set(gca,'FontSize',12);
 print('./Figures/IndividualSI_diff_Infant.tif','-dtiff','-r300');
+
+%% Load and compare with the Tu networks version
+load('SI_Infant_Tu_12Networks_session.mat','SI_Infant_TuNetworks_session');
+SI_BCP_Tu12Network_session = SI_Infant_TuNetworks_session;
+load('SI_Infant_Tu_19Networks_session.mat','SI_Infant_TuNetworks_session');
+SI_BCP_Tu19Network_session = SI_Infant_TuNetworks_session;
+
+%%
+figure('units','inches','position',[1,1,2,3]);hold on
+X = [nanmean(SI_BCP_Gordon_session);nanmean(SI_BCP_Tu19Network_session)]';
+for isess = 1:Nsess
+    plot([0,1],X(isess,:),'Color',[0.5,0.5,0.5,0.1]);
+end
+boxplot(X,1:2,'position',[0,1],'colors',[adult_color;infant_color],'symbol','.'); 
+h = findobj(gca, 'Tag', 'Box');h2 = findobj(gca,'Tag','Upper Whisker');h3 = findobj(gca,'Tag','Lower Whisker');
+for k =  1:length(h)
+    h(k).LineWidth = 2; h2(k).LineWidth = 2; h3(k).LineWidth = 2;
+end
+[h,p] = ttest(X(:,1),X(:,2))
+sigstar({[0,1]},p);
+xticklabels({'Adult Networks','Infant Networks'});
+xtickangle(45)
+ylabel('avg SI ');
+set(gca,'FontSize',12);
+print('./Figures/IndividualSI_pairedttest.tif','-dtiff','-r300');
