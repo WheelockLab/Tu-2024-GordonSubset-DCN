@@ -30,8 +30,8 @@ SI_Infant_Gordon(keepnets) = s;
 [~,sortid] = sort(IM.order);
 vals = SI_Infant_Gordon(sortid);
 
-% removeidx = find(isnan(vals)|vals<0); % Only Keep Area Subset
-removeidx = find(isnan(vals)|vals>0);% Only Keep Alternative Areas
+removeidx = find(isnan(vals)|vals<0); % Only Keep Area Subset
+% removeidx = find(isnan(vals)|vals>0);% Only Keep Alternative Areas
 
 % rmidx = NaN;
 [Lindtrunc] = with_without_mw_conversion('Lindtrunc');
@@ -57,25 +57,20 @@ ROI.Network = Dworetsky153ROI{:,6};
 
 figure;
 tiledlayout(2,1,'tilespacing','tight')
-ax = nexttile;%subplot(2,1,1);
+ax = nexttile;
 params.view='lat';        % also, 'post','lat','med'
 params.fig_handle = ax;
 PlotLRMeshes(Anat.CtxL,Anat.CtxR, params);
-
 % draw spheres
 Anat2.view ='lat';
 foci.lighting=params.lighting;
-for j=1:length(unique(ROI.Network))
-    keep=find(ROI.Network==j);
-    foci.color=ROI.color(keep,:);
-    foci.radius=ROI.radius(keep,:);
-    foci.location=ROI.coord(keep,:);
-    foci=AdjustFoci(foci,Anat2.CtxL,Anat2.CtxR,Anat2.view,Anat2.ctx);
-    hold on
-    Draw_Foci(foci,10)
-end
+foci.color = ROI.color;
+foci.radius = ROI.radius;
+foci.location = ROI.coord;
+foci=AdjustFoci(foci,Anat2.CtxL,Anat2.CtxR,Anat2.view,Anat2.ctx);
+hold on
+Draw_Foci(foci,10)
 
-% ax = subplot(2,1,2);
 ax = nexttile;
 params.fig_handle = ax;
 params.view='med';        % also, 'post','lat','med'
@@ -84,27 +79,13 @@ PlotLRMeshes(Anat.CtxL,Anat.CtxR, params);
 % draw spheres
 Anat2.view ='med';
 foci.lighting=params.lighting;
-for j=1:length(unique(ROI.Network))
-    keep=find(ROI.Network==j);
-    foci.color=ROI.color(keep,:);
-    foci.radius=ROI.radius(keep,:);
-    foci.location=ROI.coord(keep,:);
-    foci=AdjustFoci(foci,Anat2.CtxL,Anat2.CtxR,Anat2.view,Anat2.ctx);
-    hold on
-    Draw_Foci(foci,10)
-end
-% draw spheres
-Anat2.view ='med';
-foci.lighting=params.lighting;
-for j=1:length(unique(ROI.Network))
-    keep=find(ROI.Network==j);
-    foci.color=ROI.color(keep,:);
-    foci.radius=ROI.radius(keep,:);
-    foci.location=ROI.coord(keep,:);
-    foci=AdjustFoci(foci,Anat2.CtxL,Anat2.CtxR,Anat2.view,Anat2.ctx);
-    hold on
-    Draw_Foci(foci,10)
-end
+foci.color = ROI.color;
+foci.radius = ROI.radius;
+foci.location = ROI.coord;
+foci=AdjustFoci(foci,Anat2.CtxL,Anat2.CtxR,Anat2.view,Anat2.ctx);
+hold on
+Draw_Foci(foci,10)
+
 print('./Figures/GordonSubset','-dtiff','-r300')
 
 %% ========== Figure 5C ==========
