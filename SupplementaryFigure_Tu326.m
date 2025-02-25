@@ -13,7 +13,7 @@ avg_zmatBCP = mean(zmatBCP,3);
 [~,Nroi]=size(avg_zmatBCP);
 clim = [-0.5,0.5]; % color scale for FC
 load('Parcels_Tu_326.mat');
-network_name = '12Networks'
+network_name = '19Networks'
 load(['IM_Tu326_',network_name,'.mat'],'IM')
 avg_zmatBCP_Tu326 = avg_zmatBCP(IM.order,IM.order);
 zmatBCP_Tu326 = zmatBCP(IM.order,IM.order,:);

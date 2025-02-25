@@ -2,7 +2,7 @@
 addpath(genpath('./'))
 T = readtable('BCP_Jan2023_QCpass_asleep_atleast7pt2min_UNC_UMN_20240124_stats_withMullen.csv');
 %%
-[sub_id,b] = unique(T.sub_id);
+[sub_id,b] = unique(T.sub_id,'stable');
 [~,sortid] = sort(T.sex_M1F0(b));
 figure('position',[100 100 600 400]);hold on;
 counter = 0;
@@ -15,7 +15,7 @@ for i = sortid'
     if length(age_yrs)>1
         agediff = [agediff;diff(age_yrs)];
     end
-    if unique(T.sex_M1F0((string(T.sub_id)==sub_id{i})))
+    if unique(T.sex_M1F0(string(T.sub_id)==sub_id{i}))
         h(1) = plot(age_yrs,repelem(counter,length(age_yrs)),'.-','Color','b');
     else
         h(2)= plot(age_yrs,repelem(counter,length(age_yrs)),'.-','Color','r');
